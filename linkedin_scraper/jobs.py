@@ -90,7 +90,8 @@ class Job(Scraper):
             except:
                 continue
         self.location = texts[0]
-        self.posted_date = texts[3]
+        if(len(texts) >= 4):
+            self.posted_date = texts[3]
 
         try:
             self.applicant_count = self.wait_for_element_to_load(
@@ -98,10 +99,7 @@ class Job(Scraper):
             ).text.strip()
         except TimeoutException:
             self.applicant_count = 0
-        job_description_elem = self.wait_for_element_to_load(name="jobs-description")
-        self.mouse_click(job_description_elem.find_element(By.TAG_NAME, "button"))
-        job_description_elem = self.wait_for_element_to_load(name="jobs-description")
-        job_description_elem.find_element(By.TAG_NAME, "button").click()
+        job_description_elem = self.wait_for_element_to_load(by=By.ID,name="job-details")
         self.job_description = job_description_elem.text.strip()
         try:
             self.benefits = self.wait_for_element_to_load(
